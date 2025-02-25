@@ -1,0 +1,29 @@
+{% extends 'twodos/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="card shadow mt-4">
+        <div class="card-header bg-danger text-dark">
+            <i class="bi bi-exclamation-octagon me-2"></i>Confirmação de Exclusão
+        </div>
+        <div class="card-body bg-dark">
+            <div class="alert alert-danger">
+                <h5 class="alert-heading">Atenção!</h5>
+                <p>Tem certeza que deseja excluir o parâmetro "{{ object.nome }}" do sensor {{ object.sensor_logico }}?</p>
+                <hr>
+                <p class="mb-0">Esta ação removerá permanentemente todos os dados associados.</p>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-danger me-2">
+                        <i class="bi bi-trash me-2"></i>Confirmar Exclusão
+                    </button>
+                    <a href="{% url 'parametro_list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends 'twodos/base.html' %}
+{% block content %}
+<div class="container">
+    <h1 class="mb-4"><i class="bi bi-speedometer2 me-2"></i>Dashboard de Monitoramento</h1>
+    
+    <div class="row row-cols-1 row-cols-xl-2 g-4">
+        <div class="col">
+            <div class="card shadow h-100">
+                <div class="card-header bg-success text-dark">
+                    <i class="bi bi-thermometer-sun me-2"></i>Temperatura
+                </div>
+                <div class="card-body">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow h-100">
+                <div class="card-header bg-success text-dark">
+                    <i class="bi bi-droplet-half me-2"></i>Umidade
+                </div>
+                <div class="card-body">
+                    <canvas id="humidityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow mt-4">
+        <div class="card-header bg-success text-dark">
+            <i class="bi bi-building me-2"></i>Situação Atual das Salas
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="bg-success text-dark">
+                        <tr>
+                            <th>Sala</th>
+                            <th>Última Leitura</th>
+                            <th>Temperatura</th>
+                            <th>Umidade</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sala in salas_status %}
+                        <tr class="text-light">
+                            <td>{{ sala.sala.nome }}</td>
+                            <td>{{ sala.ultima_leitura.data_hora|date:"d/m/Y H:i" }}</td>
+                            <td>{{ sala.temperatura|default:"-" }}°C</td>
+                            <td>{{ sala.umidade|default:"-" }}%</td>
+                            <td>
+                                {% if sala.status == 'critico' %}
+                                <span class="badge bg-danger badge-status">Crítico</span>
+                                {% else %}
+                                <span class="badge bg-success badge-status">Normal</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="bi bi-exclamation-circle me-2"></i>
+                                Nenhum dado disponível
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Configuração comum aprimorada
+        const chartConfig = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            },
+            scales: {
+                x: {
+                    grid: { color: '#4f6f52' },
+                    ticks: { color: '#ece3ce' },
+                    title: {
+                        display: true,
+                        text: 'Horário',
+                        color: '#ece3ce'
+                    }
+                },
+                y: {
+                    grid: { color: '#4f6f52' },
+                    ticks: { color: '#ece3ce' },
+                    title: {
+                        display: true,
+                        text: 'Valores',
+                        color: '#ece3ce'
+                    }
+                }
+            }
+        };
+
+        // Gráfico de Temperatura
+        if (document.getElementById('temperatureChart')) {
+            new Chart(document.getElementById('temperatureChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: {{ temp_labels|safe }},
+                    datasets: [{
+                        label: 'Temperatura (°C)',
+                        data: {{ temp_values|safe }},
+                        borderColor: '#ff6b6b',
+                        backgroundColor: 'rgba(255, 107, 107, 0.2)',
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    ...chartConfig,
+                    scales: {
+                        ...chartConfig.scales,
+                        y: {
+                            ...chartConfig.scales.y,
+                            title: { ...chartConfig.scales.y.title, text: 'Temperatura (°C)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Gráfico de Umidade
+        if (document.getElementById('humidityChart')) {
+            new Chart(document.getElementById('humidityChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: {{ hum_labels|safe }},
+                    datasets: [{
+                        label: 'Umidade (%)',
+                        data: {{ hum_values|safe }},
+                        borderColor: '#4dabf7',
+                        backgroundColor: 'rgba(77, 171, 247, 0.2)',
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    ...chartConfig,
+                    scales: {
+                        ...chartConfig.scales,
+                        y: {
+                            ...chartConfig.scales.y,
+                            title: { ...chartConfig.scales.y.title, text: 'Umidade (%)' }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

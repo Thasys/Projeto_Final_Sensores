@@ -1,0 +1,33 @@
+{% extends 'twodos/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="card shadow mt-4">
+        <div class="card-header bg-success text-dark">
+            <i class="bi bi-diagram-3 me-2"></i>Detalhes do Sensor Lógico
+        </div>
+        <div class="card-body bg-dark">
+            <dl class="row">
+                <dt class="col-sm-3">Descrição:</dt>
+                <dd class="col-sm-9">{{ object.descricao }}</dd>
+
+                <dt class="col-sm-3">Sensor Físico:</dt>
+                <dd class="col-sm-9">{{ object.sensor_fisico.nome }}</dd>
+
+                <dt class="col-sm-3">Tipo de Sensor:</dt>
+                <dd class="col-sm-9">{{ object.tipo_sensor.descricao }}</dd>
+
+                <dt class="col-sm-3">Parâmetros:</dt>
+                <dd class="col-sm-9">
+                    <ul class="list-unstyled">
+                        {% for param in object.parametro_set.all %}
+                        <li>{{ param.nome }}: {{ param.valor }}</li>
+                        {% empty %}
+                        <li class="text-muted">Nenhum parâmetro configurado</li>
+                        {% endfor %}
+                    </ul>
+                </dd>
+            </dl>
+        </div>
+    </div>
+</div>
+{% endblock %}

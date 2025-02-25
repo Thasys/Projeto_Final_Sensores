@@ -1,0 +1,54 @@
+{% extends 'twodos/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="card shadow mt-4">
+        <div class="card-header bg-success text-dark">
+            <i class="bi bi-exclamation-triangle me-2"></i>Sensores Críticos
+        </div>
+        <div class="card-body bg-dark">
+            <div class="alert alert-warning">
+                <i class="bi bi-info-circle me-2"></i>
+                Listagem dos sensores com maior ocorrência de valores fora dos parâmetros estabelecidos
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="bg-success text-dark">
+                        <tr>
+                            <th>Sensor</th>
+                            <th>Descrição</th>
+                            <th>Limites</th>
+                            <th>Ocorrências</th>
+                            <th>Última Leitura</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sensor in sensor_data %}
+                        <tr class="text-light">
+                            <td>#{{ sensor.sensor.id }}</td>
+                            <td>{{ sensor.sensor.descricao }}</td>
+                            <td>
+                                {{ sensor.sensor.tipo_sensor.limite_inferior_permitido }} ~ 
+                                {{ sensor.sensor.tipo_sensor.limite_superior_permitido }}
+                                {{ sensor.sensor.tipo_sensor.unidade }}
+                            </td>
+                            <td>
+                                <span class="badge bg-danger">{{ sensor.critical_count }}</span>
+                            </td>
+                            <td>{{ sensor.last_reading|date:"d/m/Y H:i" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Nenhum sensor crítico identificado
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "twodos/base.html" %}
+
+{% block content %}
+    <h2>Excluir Sensor</h2>
+    <p>Tem certeza que deseja excluir o sensor "{{ sensor_logico.nome }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmar</button>
+    </form>
+    <a href="{% url 'sensor_fisico_list' %}">Cancelar</a>
+{% endblock %}

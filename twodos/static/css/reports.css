@@ -1,0 +1,19 @@
+@media print {
+    .no-print {
+        display: none;
+    }
+
+    table {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .report-header {
+        margin-bottom: 20px;
+    }
+
+    .table tbody tr:first-child {
+        display: table-row !important;
+        visibility: visible !important;
+    }
+}

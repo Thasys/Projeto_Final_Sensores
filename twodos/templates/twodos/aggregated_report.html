@@ -1,0 +1,48 @@
+{% extends 'twodos/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="card shadow mt-4">
+        <div class="card-header bg-success text-dark">
+            <i class="bi bi-pie-chart me-2"></i>Relatório Agregado
+        </div>
+        <div class="card-body bg-dark">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card shadow">
+                        <div class="card-header bg-secondary text-dark">
+                            <i class="bi bi-funnel me-2"></i>Filtros
+                        </div>
+                        <div class="card-body">
+                            <form method="get">
+                                <div class="mb-3">
+                                    <label class="form-label">Intervalo (minutos)</label>
+                                    <input type="number" name="interval" class="form-control" 
+                                           value="{{ interval }}" min="5">
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="bi bi-arrow-clockwise me-2"></i>Atualizar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-8">
+                    <div class="card shadow">
+                        <div class="card-header bg-secondary text-dark">
+                            <i class="bi bi-table me-2"></i>Dados Consolidados
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <!-- Conteúdo da tabela -->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'twodos/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="card shadow mt-4">
+        <div class="card-header bg-success text-dark">
+            <i class="bi bi-info-circle me-2"></i>Detalhes da Sala
+        </div>
+        <div class="card-body bg-dark">
+            <dl class="row">
+                <dt class="col-sm-3">Nome:</dt>
+                <dd class="col-sm-9">{{ object.nome }}</dd>
+
+                <dt class="col-sm-3">Sigla:</dt>
+                <dd class="col-sm-9">{{ object.sigla }}</dd>
+
+                <dt class="col-sm-3">Pavimento:</dt>
+                <dd class="col-sm-9">{{ object.pavimento.nome }}</dd>
+
+                <dt class="col-sm-3">Orientação:</dt>
+                <dd class="col-sm-9">{{ object.orientacao.nome }}</dd>
+            </dl>
+            
+            <div class="mt-4 d-flex justify-content-end">
+                <a href="{% url 'sala_list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Voltar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

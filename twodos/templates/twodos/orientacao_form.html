@@ -1,0 +1,12 @@
+{% extends 'twodos/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if object %}Editar Orientação{% else %}Criar Orientação{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Salvar</button>
+        <a href="{% url 'orientacao_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

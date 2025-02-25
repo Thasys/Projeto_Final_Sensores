@@ -1,0 +1,29 @@
+<ul class="navbar-nav ms-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'home' %}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="bi bi-database me-1"></i>Cadastros
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="{% url 'sala_list' %}"><i class="bi bi-door-open me-2"></i>Salas</a></li>
+            <li><a class="dropdown-item" href="{% url 'pavimento_list' %}"><i class="bi bi-building me-2"></i>Pavimentos</a></li>
+            <li><a class="dropdown-item" href="{% url 'orientacao_list' %}"><i class="bi bi-compass me-2"></i>Orientações</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'sensor_fisico_list' %}"><i class="bi bi-cpu me-2"></i>Sensores Físicos</a></li>
+            <li><a class="dropdown-item" href="{% url 'tipo_sensor_list' %}"><i class="bi bi-clipboard-data me-2"></i>Tipos de Sensor</a></li>
+            <li><a class="dropdown-item" href="{% url 'sensor_logico_list' %}"><i class="bi bi-diagram-3 me-2"></i>Sensores Lógicos</a></li>
+        </ul>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="bi bi-file-earmark-bar-graph me-1"></i>Relatórios
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="{% url 'custom_report' %}"><i class="bi bi-filter-square me-2"></i>Personalizado</a></li>
+            <li><a class="dropdown-item" href="{% url 'critical_sensors_report' %}"><i class="bi bi-exclamation-triangle me-2"></i>Sensores Críticos</a></li>
+            <li><a class="dropdown-item" href="{% url 'aggregated_report' %}"><i class="bi bi-pie-chart me-2"></i>Agregado</a></li>
+        </ul>
+    </li>
+</ul>

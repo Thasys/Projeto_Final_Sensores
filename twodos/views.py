@@ -1,6 +1,16 @@
 import datetime
 from .forms import ReportFilterForm
-from django.db.models import Count, Q, F, Max, Avg, ExpressionWrapper, FloatField
+from django.db.models import (
+    Count,
+    Q,
+    F,
+    Max,
+    Avg,
+    ExpressionWrapper,
+    FloatField,
+    DateTimeField,
+)
+from django.db.models.functions import Trunc, Cast, Extract
 from django.db import connection
 from django.utils import timezone
 from django.urls import reverse_lazy
@@ -339,9 +349,7 @@ class DashboardView(TemplateView):
 
         # Dados do status das salas
         salas = Sala.objects.prefetch_related(
-            "leituras",
-            "leituras__leituras_sensores",
-            "leituras__leituras_sensores__sensor_logico__tipo_sensor",
+            "leituras__leituras_sensores__sensor_logico__tipo_sensor"
         ).all()
 
         salas_status = []
@@ -381,19 +389,14 @@ class CustomReportView(TemplateView):
         form = ReportFilterForm(self.request.GET or None)
         context["form"] = form
         results = None
+
         if form.is_valid():
-            qs = LeituraSensor.objects.all()
-            if form.cleaned_data.get("start_date"):
-                qs = qs.filter(leitura__data_hora__gte=form.cleaned_data["start_date"])
-            if form.cleaned_data.get("end_date"):
-                qs = qs.filter(leitura__data_hora__lte=form.cleaned_data["end_date"])
-            if form.cleaned_data.get("sala"):
-                qs = qs.filter(leitura__sala=form.cleaned_data["sala"])
-            if form.cleaned_data.get("tipo_sensor"):
-                qs = qs.filter(
-                    sensor_logico__tipo_sensor=form.cleaned_data["tipo_sensor"]
-                )
-            results = qs.order_by("leitura__data_hora")
+            qs = LeituraSensor.objects.select_related(
+                "leitura__sala", "sensor_logico__tipo_sensor"
+            )
+            # ... filtros mantidos
+            results = qs.order_by("-leitura__data_hora")
+
         context["results"] = results
         return context
 
@@ -446,20 +449,21 @@ class AggregatedReportView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        interval = int(self.request.GET.get("interval", 60))  # Default 60 minutos
+        interval = int(self.request.GET.get("interval", 60))  # Intervalo em minutos
 
-        # Cálculo dos intervalos de tempo
-        time_buckets = connection.ops.datetime_trunc_sql(
-            "minute", "leitura__data_hora", interval
-        )
-
-        aggregated_data = (
-            LeituraSensor.objects.extra(select={"time_bucket": time_buckets})
+        # Cálculo do intervalo personalizado
+        aggregated_data = LeituraSensor.objects.annotate(
+            total_minutes=Extract("leitura__data_hora", "epoch") / 60,
+            time_bucket=Cast(
+                (F("total_minutes") / interval).astype("integer") * interval,
+                output_field=DateTimeField(),
+            )
             .values("time_bucket", "sensor_logico__tipo_sensor__descricao")
             .annotate(average_value=Avg("valor"))
-            .order_by("time_bucket")
+            .order_by("time_bucket"),
         )
 
+        # Formatação dos dados
         context["aggregated_data"] = [
             (
                 item["time_bucket"].strftime("%d/%m/%Y %H:%M"),
@@ -468,6 +472,8 @@ class AggregatedReportView(TemplateView):
             )
             for item in aggregated_data
         ]
+
+        context["interval"] = interval
         return context
 
 

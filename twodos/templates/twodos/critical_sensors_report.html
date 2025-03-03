@@ -28,8 +28,8 @@
                             <td>#{{ sensor.sensor.id }}</td>
                             <td>{{ sensor.sensor.descricao }}</td>
                             <td>
-                                {{ sensor.sensor.tipo_sensor.limite_inferior_permitido }} ~ 
-                                {{ sensor.sensor.tipo_sensor.limite_superior_permitido }}
+                                {{ sensor.sensor.tipo_sensor.limite_inferior_permitido|floatformat:2 }} ~ 
+                                {{ sensor.sensor.tipo_sensor.limite_superior_permitido|floatformat:2 }}
                                 {{ sensor.sensor.tipo_sensor.unidade }}
                             </td>
                             <td>

@@ -6,7 +6,7 @@
 
 Sistema para monitoramento de condições ambientais (temperatura e umidade) em salas e laboratórios do Instituto Federal de Sergipe.
 
-![Dashboard Preview](screenshots/dashboard.png) <!-- Adicione uma screenshot real -->
+![Dashboard Preview](screenshots/dashboard.png)
 
 ## 📋 Tabela de Conteúdos
 - [Funcionalidades](#✨-funcionalidades)
@@ -40,5 +40,5 @@ Sistema para monitoramento de condições ambientais (temperatura e umidade) em 
 
 ### 1. Clonar repositório
 ```bash
-git clone https://github.com/seu-usuario/monitoramento-ifs.git
-cd monitoramento-ifs
+git clone https://github.com/Thasys/Projeto_Final_Sensores
+cd Projeto_Final_Sensores

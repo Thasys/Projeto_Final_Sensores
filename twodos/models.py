@@ -8,6 +8,7 @@ class Pavimento(models.Model):
     )
 
     class Meta:
+        db_table = "pavimento"
         verbose_name = "Pavimento"
         verbose_name_plural = "Pavimentos"
         ordering = ["nome"]
@@ -22,6 +23,7 @@ class Orientacao(models.Model):
     )
 
     class Meta:
+        db_table = "orientacao"
         verbose_name = "Orientação"
         verbose_name_plural = "Orientações"
         ordering = ["nome"]
@@ -40,15 +42,18 @@ class Sala(models.Model):
         on_delete=models.CASCADE,
         related_name="salas_pavimento",
         verbose_name="Pavimento Associado",
+        db_column="id_pavimento",
     )
     orientacao = models.ForeignKey(
         Orientacao,
         on_delete=models.CASCADE,
         related_name="salas_orientacao",
         verbose_name="Orientação Geográfica",
+        db_column="id_orientacao",
     )
 
     class Meta:
+        db_table = "sala"
         verbose_name = "Sala"
         verbose_name_plural = "Salas"
         ordering = ["pavimento__nome", "nome"]
@@ -84,6 +89,7 @@ class SensorFisico(models.Model):
     )
 
     class Meta:
+        db_table = "sensor_fisico"
         verbose_name = "Sensor Físico"
         verbose_name_plural = "Sensores Físicos"
         ordering = ["nome"]
@@ -117,6 +123,7 @@ class TipoSensor(models.Model):
     )
 
     class Meta:
+        db_table = "tipo_sensor"
         verbose_name = "Tipo de Sensor"
         verbose_name_plural = "Tipos de Sensores"
         ordering = ["descricao"]
@@ -131,12 +138,14 @@ class SensorLogico(models.Model):
         on_delete=models.CASCADE,
         related_name="sensores_logicos",
         verbose_name="Hardware Associado",
+        db_column="id_sensor_fisico",
     )
     tipo_sensor = models.ForeignKey(
         TipoSensor,
         on_delete=models.CASCADE,
         related_name="sensores_tipo",
         verbose_name="Configuração de Medição",
+        db_column="id_tipo_sensor",
     )
     descricao = models.CharField(
         max_length=50,
@@ -148,6 +157,7 @@ class SensorLogico(models.Model):
     )
 
     class Meta:
+        db_table = "sensor_logico"
         verbose_name = "Sensor Lógico"
         verbose_name_plural = "Sensores Lógicos"
         ordering = ["sensor_fisico__nome", "descricao"]
@@ -163,6 +173,7 @@ class Parametro(models.Model):
         on_delete=models.CASCADE,
         related_name="parametros",
         verbose_name="Sensor Associado",
+        db_column="id_sensor_logico",
     )
     nome = models.CharField(
         max_length=50,
@@ -175,6 +186,7 @@ class Parametro(models.Model):
     )
 
     class Meta:
+        db_table = "parametro"
         verbose_name = "Parâmetro de Operação"
         verbose_name_plural = "Parâmetros de Operação"
         ordering = ["sensor_logico", "nome"]
@@ -190,12 +202,14 @@ class Leitura(models.Model):
         on_delete=models.CASCADE,
         related_name="leituras",
         verbose_name="Local de Medição",
+        db_column="id_sala",
     )
     data_hora = models.DateTimeField(
         verbose_name="Data e Hora da Medição", db_index=True
     )
 
     class Meta:
+        db_table = "leitura"
         verbose_name = "Leitura Ambiental"
         verbose_name_plural = "Leituras Ambientais"
         ordering = ["-data_hora"]
@@ -213,12 +227,14 @@ class LeituraSensor(models.Model):
         on_delete=models.CASCADE,
         related_name="leituras_sensor",
         verbose_name="Sensor",
+        db_column="id_sensor_logico",
     )
     leitura = models.ForeignKey(
         Leitura,
         on_delete=models.CASCADE,
         related_name="leituras_sensores",
         verbose_name="Leitura Associada",
+        db_column="id_leitura",
     )
     valor = models.FloatField(
         verbose_name="Valor Medido",
@@ -226,6 +242,7 @@ class LeituraSensor(models.Model):
     )
 
     class Meta:
+        db_table = "leitura_sensor"
         verbose_name = "Leitura de Sensor"
         verbose_name_plural = "Leituras de Sensores"
         ordering = ["leitura__data_hora"]
